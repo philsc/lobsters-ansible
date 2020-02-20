@@ -137,11 +137,9 @@ class TestInvite(unittest.TestCase):
         self.assertTrue(is_triggerable(invite.note))
 
 
-    @mock.patch("invite.time.sleep")
     @mock.patch("invite.time.time")
-    def test_successful_hint(self, mock_time, mock_sleep):
+    def test_successful_hint(self, mock_time):
         mock_time.side_effect = self.time.time
-        mock_sleep.side_effect = self.time.sleep
 
         (num_events, output) = self.trigger_event("JOIN")
         self.assertEqual(num_events, 1)
@@ -150,6 +148,31 @@ class TestInvite(unittest.TestCase):
         (num_rules, output) = self.trigger_rule("Can I get an invite?")
         self.assertEqual(num_rules, 1)
         self.assertRegex(output, rb".*: If you would like an invite to lobste.rs, please look at the chat FAQ first\. .*")
+
+    @mock.patch("invite.time.time")
+    def test_no_hint_after_timeout(self, mock_time):
+        mock_time.side_effect = self.time.time
+
+        (num_events, output) = self.trigger_event("JOIN")
+        self.assertEqual(num_events, 1)
+        self.assertEqual(output, b"")
+
+        # Wait over an hour.
+        self.time.sleep(4000)
+
+        # Expect silence.
+        (num_rules, output) = self.trigger_rule("Can I get an invite?")
+        self.assertEqual(num_rules, 1)
+        self.assertEqual(output, b"")
+
+    @mock.patch("invite.time.time")
+    def test_no_hint_without_join(self, mock_time):
+        mock_time.side_effect = self.time.time
+
+        # Expect silence.
+        (num_rules, output) = self.trigger_rule("Can I get an invite?")
+        self.assertEqual(num_rules, 1)
+        self.assertEqual(output, b"")
 
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
