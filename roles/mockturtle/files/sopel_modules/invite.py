@@ -48,7 +48,7 @@ def note(bot, trigger):
         bot.db.set_nick_value(trigger.nick,
                               'join_channel_' + trigger.sender,
                               time.time())
-        logger.debug("Noting JOIN time for user %s" % trigger.nick)
+        logger.debug("Noting JOIN time for user %s in channel %s" % (trigger.nick, trigger.sender))
 
 
 if __name__ == "__main__":

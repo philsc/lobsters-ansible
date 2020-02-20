@@ -110,10 +110,10 @@ class TestInvite(unittest.TestCase):
                     function(wrapper, trigger)
                     num_events += 1
 
-        return (num_events, wrapper.backend.message_sent)
+        return (num_events, b"".join(wrapper.backend.message_sent))
 
     def trigger_rule(self, message):
-        full_message = ':hostmask PRIVMSG sender :%s' % message
+        full_message = ':hostmask PRIVMSG #channel :%s' % message
         pretrigger = sopel.trigger.PreTrigger(self.bot.nick, full_message)
         trigger = sopel.trigger.Trigger(self.bot.config, pretrigger, self._match)
         wrapper = sopel.bot.SopelWrapper(self.bot, trigger)
@@ -129,7 +129,8 @@ class TestInvite(unittest.TestCase):
                     function(wrapper, trigger)
                     num_rules += 1
 
-        return (num_rules, wrapper.backend.message_sent)
+        return (num_rules, b"".join(wrapper.backend.message_sent))
+
 
     def test_basics(self):
         self.assertTrue(is_triggerable(invite.invite))
@@ -144,12 +145,11 @@ class TestInvite(unittest.TestCase):
 
         (num_events, output) = self.trigger_event("JOIN")
         self.assertEqual(num_events, 1)
-        self.assertListEqual(output, [])
+        self.assertEqual(output, b"")
 
         (num_rules, output) = self.trigger_rule("Can I get an invite?")
         self.assertEqual(num_rules, 1)
-        self.assertListEqual(output, [
-            "If you would like an invite to lobste.rs"])
+        self.assertRegex(output, rb".*: If you would like an invite to lobste.rs, please look at the chat FAQ first\. .*")
 
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
