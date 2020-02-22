@@ -6,12 +6,13 @@ from tempfile import TemporaryDirectory
 import sopel.config
 
 # A minimal config.
-DEFAULT_CONFIG="""
+DEFAULT_CONFIG = """
 [core]
 owner = Bar
 nick = Sopel
 enable = coretasks
 """
+
 
 class MockConfig(sopel.config.Config):
     """Mocks a sopel config.
@@ -24,7 +25,6 @@ class MockConfig(sopel.config.Config):
     The intended use case is to instantiate one of these at the beginning of
     each test. Make sure to call cleanup() at the end of each test.
     """
-
     def __init__(self):
         self._tmpdir = TemporaryDirectory()
         self._tmpfile = os.path.join(self._tmpdir.name, "test.cfg")

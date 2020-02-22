@@ -14,7 +14,6 @@ from mockturtle import invite
 
 class TestInvite(TestFixture):
     """The test fixture for validating invite.py."""
-
     def setUp(self) -> None:
         super().setUp(invite)
 
@@ -29,7 +28,9 @@ class TestInvite(TestFixture):
 
         (num_rules, output) = self.trigger_rule("Can I get an invite?")
         self.assertEqual(num_rules, 1)
-        self.assertRegex(output, rb".*: If you would like an invite to lobste.rs, please look at the chat FAQ first\. .*")
+        self.assertRegex(
+            output, rb".*: If you would like an invite to lobste.rs, "
+            rb"please look at the chat FAQ first\. .*")
 
     @mock.patch("mockturtle.invite.time.time")
     def test_no_hint_after_timeout(self, mock_time):

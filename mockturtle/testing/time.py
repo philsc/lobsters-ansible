@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 class MockTime():
     """Mocks time for unit testing purposes.
 
@@ -23,7 +24,6 @@ class MockTime():
                 mock_sleep.side_effect = self.clock.sleep
                 module.function_to_be_tested()
     """
-
     def __init__(self):
         self._fake_time = 0.0
 

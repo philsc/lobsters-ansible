@@ -13,6 +13,7 @@ from sopel.loader import clean_module
 from mockturtle.testing.time import MockTime
 from mockturtle.testing.config import MockConfig
 
+
 class TestFixture(unittest.TestCase):
     """The test fixture for validating invite.py."""
 
@@ -26,7 +27,8 @@ class TestFixture(unittest.TestCase):
         botfactory = sopel.tests.factories.BotFactory()
         self.bot = botfactory.preloaded(self.config)
 
-        self.callables, self.jobs, self.shutdowns, self.urls = clean_module(module, self.bot.config)
+        self.callables, self.jobs, self.shutdowns, self.urls = clean_module(
+            module, self.bot.config)
 
     def tearDown(self) -> None:
         """Tears down the test."""
@@ -62,7 +64,8 @@ class TestFixture(unittest.TestCase):
         # TODO(phil): Can we de-duplicate this and trigger_rule?
         full_message = ':hostmask %s #channel user :Some text' % event_name
         pretrigger = sopel.trigger.PreTrigger(self.bot.nick, full_message)
-        trigger = sopel.trigger.Trigger(self.bot.config, pretrigger, self._match)
+        trigger = sopel.trigger.Trigger(self.bot.config, pretrigger,
+                                        self._match)
         wrapper = sopel.bot.SopelWrapper(self.bot, trigger)
         num_events = 0
 
@@ -100,7 +103,8 @@ class TestFixture(unittest.TestCase):
         """
         full_message = ':hostmask PRIVMSG #channel :%s' % message
         pretrigger = sopel.trigger.PreTrigger(self.bot.nick, full_message)
-        trigger = sopel.trigger.Trigger(self.bot.config, pretrigger, self._match)
+        trigger = sopel.trigger.Trigger(self.bot.config, pretrigger,
+                                        self._match)
         wrapper = sopel.bot.SopelWrapper(self.bot, trigger)
         num_rules = 0
 
